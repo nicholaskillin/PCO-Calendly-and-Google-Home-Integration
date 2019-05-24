@@ -4,6 +4,11 @@ This outlines the process that I went through in order to get my Google home to 
 # The Overview
 As crazy as it may seem, it's not possible to setup a Google home to watch a specific Google Calendar in order to let you know when specific events are coming up. So, I used an open source smart home platform to make this happen. The short version of the story is that Home Assistant is now watching my work Google Calendar for events that have either "Call" or "and Nick Killin" in the event name (these are two strings that Calendly uses when making events for me) and when it sees one of them it tells my Google Home to announce that I have a phone call (along with the name of the customer) 2 minutes before the event, and it sets my Slack status to "Phone Call" and changes my Slack emoji to the :phone: emoji. Sound cool? If you want a step-by-step process on how to set it up for yourself, you are in luck!
 
+# What you will need
+There are only two things that you will need to buy if you don't have them in order to get this up and running.
+- [A Raspberry pi](https://www.amazon.com/CanaKit-Raspberry-Starter-Premium-Black/dp/B07BCC8PK7/ref=sr_1_1_sspa?crid=3D18BYD45TIEB&keywords=raspberry+pi+3+b%2B&qid=1558667764&s=gateway&sprefix=raspber%2Caps%2C169&sr=8-1-spons&psc=1)
+- [A Google Home](https://express.google.com/u/0/product/11316989343855662812_7008326304182003253_105696200?utm_source=google_shopping&utm_medium=tu_prop&utm_content=eid-lsjeuxoeqt&gtim=CMPLxN7GzL-5dhC5l6LI08OvqnUY8NOUESIDVVNEKOCw1ucFMMiXszI&utm_campaign=105696200&gclid=CjwKCAjwiZnnBRBQEiwAcWKfYjppMSn_FE73CCRuRFwHw2T0AOG97cw2E-0yq9MpGHYpz30mfNKYmhoCBscQAvD_BwE)
+
 # Step 1 - Install Home Assistant
 Home Assistant is free, open source software usually used for controlling your smart home devices. However, with a little creativity you can set it up to do much more.
 
@@ -97,9 +102,9 @@ On the left are nodes that we will need to start dragging onto your flow and con
 
 The first thing we have to do is setup the node that will trigger this entire process. A while back we create a sensor that turns on 2 minutes before our calendly events begin. So to get Node-red to watch that sensor you will want to drag over an `Events:state` node. Configure it like this.
 
-## Put calendly offset sensor node image here
+![](/pictures/calendly%20event%20offset%20sensor%20node.png)
 
 Next we are going to have that node connect to a `function` node. Drag a `function` node onto your flow. Then click and drag from the white dot on the right of your `events:state` node to the dot on the left of your `function` node. That connects the output of the `events:state` to the input of the `function` node. Open up your function node and configure it like this:
 
-## Put image of function node setup here
+![](/pictures/function%20node.png)
 
