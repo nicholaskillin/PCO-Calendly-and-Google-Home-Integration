@@ -1,13 +1,19 @@
-# PCO-Calendly-and-Google-Home-Integration
-This outlines the process that I went through in order to get my Google home to announce that I had a phone call coming up whenever it saw a Calendly appointment on my PCO Google Calendar as well as set my slack status for me.
+# PCO-Home-Assistant-Integrations
+This outlines the process that I went through in order to get an instance of Home Assitant up and running. Home assistant does two things for me at work.
+1. I have my Google home to announce that I had a phone call coming up whenever it saw a Calendly appointment on my PCO Google Calendar.
+2. I have Home Assistant automatically update my slack status for me at certain parts of the day.
+
+Setting up Home Assistant will allow you to do one or both of these things, and probably a host of other things that I haven't thought of yet.
 
 # The Overview
 As crazy as it may seem, it's not possible to setup a Google home to watch a specific Google Calendar in order to let you know when specific events are coming up. So, I used an open source smart home platform to make this happen. The short version of the story is that Home Assistant is now watching my work Google Calendar for events that have either "Call" or "and Nick Killin" in the event name (these are two strings that Calendly uses when making events for me) and when it sees one of them it tells my Google Home to announce that I have a phone call (along with the name of the customer) 2 minutes before the event, and it sets my Slack status to "Phone Call" and changes my Slack emoji to the :phone: emoji. Sound cool? If you want a step-by-step process on how to set it up for yourself, you are in luck!
 
+While it's keeping an eye on my calendar, I also have it automatically set my status for things such as breaks and lunch.
+
 # What you will need
 There are only two things that you will need to buy if you don't have them in order to get this up and running.
 - [A Raspberry pi](https://www.amazon.com/CanaKit-Raspberry-Starter-Premium-Black/dp/B07BCC8PK7/ref=sr_1_1_sspa?crid=3D18BYD45TIEB&keywords=raspberry+pi+3+b%2B&qid=1558667764&s=gateway&sprefix=raspber%2Caps%2C169&sr=8-1-spons&psc=1)
-- [A Google Home](https://express.google.com/u/0/product/11316989343855662812_7008326304182003253_105696200?utm_source=google_shopping&utm_medium=tu_prop&utm_content=eid-lsjeuxoeqt&gtim=CMPLxN7GzL-5dhC5l6LI08OvqnUY8NOUESIDVVNEKOCw1ucFMMiXszI&utm_campaign=105696200&gclid=CjwKCAjwiZnnBRBQEiwAcWKfYjppMSn_FE73CCRuRFwHw2T0AOG97cw2E-0yq9MpGHYpz30mfNKYmhoCBscQAvD_BwE)
+- [A Google Home ](https://express.google.com/u/0/product/11316989343855662812_7008326304182003253_105696200?utm_source=google_shopping&utm_medium=tu_prop&utm_content=eid-lsjeuxoeqt&gtim=CMPLxN7GzL-5dhC5l6LI08OvqnUY8NOUESIDVVNEKOCw1ucFMMiXszI&utm_campaign=105696200&gclid=CjwKCAjwiZnnBRBQEiwAcWKfYjppMSn_FE73CCRuRFwHw2T0AOG97cw2E-0yq9MpGHYpz30mfNKYmhoCBscQAvD_BwE) - this isn't needed if you just want Home Assistant to update your Slack status based on your calendar. 
 
 # Step 1 - Install Home Assistant
 Home Assistant is free, open source software usually used for controlling your smart home devices. However, with a little creativity you can set it up to do much more.
@@ -61,7 +67,11 @@ Once you have added that in save your file, click on the gear in the top right-h
 
 Once home assistant restarts you should now have an entity called `calendar.<device_id>` with `<device_id>` being whatever you entered into your `google_calendars.yaml` file. This entity is kind of like a switch and it's state will switch to "on" when you have an event happening and "off" when there is no event currently happening. It also contains information about your event like the name of the event. 
 
-This is great! You've reached a real milestone. Home Assistant now knows when you are supposed to be on a phone call. There is only one catch. The `calendar.<device_id>` entity that you created will only switch to "on" at the exact moment that you are supposed to start your phone call. That's not super helpful. So now we need to create a sensor that will switch to "on" 2 minutes before your events in your calendar entity being. This sensor will be the sensor tha triggers our entire automation process.
+This is great! You've reached a real milestone. Home Assistant now knows when you are supposed to be on a phone call. 
+
+IF you are only doing this so that you can update your slack status, then you can repeat this process for other events that you want home assistant to watch for. For example, 
+
+There is only one catch. The `calendar.<device_id>` entity that you created will only switch to "on" at the exact moment that you are supposed to start your phone call. That's not super helpful. So now we need to create a sensor that will switch to "on" 3 minutes before your events in your calendar entity begin. This sensor will be the sensor that triggers our entire automation process.
 
 To set this up you will want to go into your `configuration.yaml` file and add the following code:
 
