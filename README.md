@@ -150,19 +150,19 @@ On the left are nodes that we will need to start dragging onto your flow and con
 ### Setting up a flow to update your slack status
 The first thing we have to do is setup the node that will trigger this entire process. For that you will want to grab one of the `events: state` nodes from the node sidebar of node red, and drag that onto your work area on the right. Here is how you will want to setup those nodes. 
 
-![]() - add image for "break"
+![](/pictures/break_event_state.png)
 
 Then we will need to use a `function` node from the left sidebar to format the data that we are going to send to Slack. Here is an example of the function that I would use to let Slack know that I'm on break. This function also automatically sends an update every 1 minute.
 
-![]() - add image of break function
+![](/pictures/break_slack_function_node.png)
 
 Finally, we have to send that data to Slack with an `http request` node. Here is what that should look like.
 
-![]() - add image of http request node
+![](/pictures/slack_http_request.png)
 
 You can have a bunch of the `event:state` nodes connected to their own corresponding `function` nodes, then have all of those `function` nodes connect to a single node that sends the data to Slack, like this.
 
-![]() - image of whole flow. 
+![](/pictures/slack_status_flow.png)
 
 ### Setting up a flow for Google Home
 This data is coming soon.
