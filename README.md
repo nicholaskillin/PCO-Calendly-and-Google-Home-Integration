@@ -106,7 +106,7 @@ If you are only doing this so that you can update your slack status, then you ca
     track: true
     search: "lunch"
 ```
-## Getting notifications before an event (this is only needed for the google home side of things, not slack)
+### Getting notifications before an event (this is only needed for the google home side of things, not slack)
 We are getting real close, but there is one issue. The `calendar.<device_id>` entity that you created will only switch to "on" at the exact moment that you are supposed to start your phone call. That's not super helpful. So now we need to create a sensor that will switch to "on" 3 minutes before your events in your calendar entity begin. This sensor will be the sensor that triggers our entire automation process.
 
 To set this up you will want to go into your `configuration.yaml` file and add the following code:
@@ -147,11 +147,25 @@ Now it's time to head back over to Home Assistant in order to put it all togethe
 
 On the left are nodes that we will need to start dragging onto your flow and configuring to do what we want. I'm going to walk you through exactly how mine works, but you can customize it if you'd like.
 
-The first thing we have to do is setup the node that will trigger this entire process. A while back we create a sensor that turns on 2 minutes before our calendly events begin. So to get Node-red to watch that sensor you will want to drag over an `Events:state` node. Configure it like this.
+### Setting up a flow to update your slack status
+The first thing we have to do is setup the node that will trigger this entire process. For that you will want to grab one of the `events: state` nodes from the node sidebar of node red, and drag that onto your work area on the right. Here is how you will want to setup those nodes. 
 
-![](/pictures/calendly%20event%20offset%20sensor%20node.png)
+![]() - add image for "break"
 
-Next we are going to have that node connect to a `function` node. Drag a `function` node onto your flow. Then click and drag from the white dot on the right of your `events:state` node to the dot on the left of your `function` node. That connects the output of the `events:state` to the input of the `function` node. Open up your function node and configure it like this:
+Then we will need to use a `function` node from the left sidebar to format the data that we are going to send to Slack. Here is an example of the function that I would use to let Slack know that I'm on break. This function also automatically sends an update every 1 minute.
 
-![](/pictures/function%20node.png)
+![]() - add image of break function
+
+Finally, we have to send that data to Slack with an `http request` node. Here is what that should look like.
+
+![]() - add image of http request node
+
+You can have a bunch of the `event:state` nodes connected to their own corresponding `function` nodes, then have all of those `function` nodes connect to a single node that sends the data to Slack, like this.
+
+![]() - image of whole flow. 
+
+### Setting up a flow for Google Home
+This data is coming soon.
+
+
 
