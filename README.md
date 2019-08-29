@@ -69,9 +69,45 @@ Once home assistant restarts you should now have an entity called `calendar.<dev
 
 This is great! You've reached a real milestone. Home Assistant now knows when you are supposed to be on a phone call. 
 
-IF you are only doing this so that you can update your slack status, then you can repeat this process for other events that you want home assistant to watch for. For example, 
+If you are only doing this so that you can update your slack status, then you can repeat this process for other events that you want home assistant to watch for. Here is my setup to give you some ideas.
 
-There is only one catch. The `calendar.<device_id>` entity that you created will only switch to "on" at the exact moment that you are supposed to start your phone call. That's not super helpful. So now we need to create a sensor that will switch to "on" 3 minutes before your events in your calendar entity begin. This sensor will be the sensor that triggers our entire automation process.
+```
+- cal_id: killin@ministrycentered.com
+  entities:
+  - device_id: nick_work
+    ignore_availability: true
+    name: Nick Work
+    track: true
+    max_results: 15
+  - device_id: nick_calendly
+    ignore_availability: true
+    name: Nick Calendly
+    track: true
+    search: "and Nick Killin"
+    search: "Call"
+  - device_id: nick_breaks
+    name: Nick Breaks
+    track: true
+    search: "Break"
+  - device_id: nick_start_work
+    name: Nick Start Work
+    track: true
+    search: "Start Tickets"
+  - device_id: nick_end_work
+    name: Nick End Work
+    track: true
+    search: "Wrap up tickets"
+  - device_id: nick_one_to_one
+    name: Nick One To One
+    track: true
+    search: "Killin 1:1"
+  - device_id: nick_lunch
+    name: Nick Lunch
+    track: true
+    search: "lunch"
+```
+## Getting notifications before an event (this is only needed for the google home side of things, not slack)
+We are getting real close, but there is one issue. The `calendar.<device_id>` entity that you created will only switch to "on" at the exact moment that you are supposed to start your phone call. That's not super helpful. So now we need to create a sensor that will switch to "on" 3 minutes before your events in your calendar entity begin. This sensor will be the sensor that triggers our entire automation process.
 
 To set this up you will want to go into your `configuration.yaml` file and add the following code:
 
@@ -88,14 +124,15 @@ To set this up you will want to go into your `configuration.yaml` file and add t
     calendly_event_offset:
       friendly_name: "Calendly Offset"
       value_template: >
-        {% if as_timestamp(states.calendar.nick_calendly.attributes.start_time) - as_timestamp(strptime(states.sensor.date_time.state, "%Y-%m-%d, %H:%M")) < 180 %}on{% else %}off{% endif %}
+        {% set st = state_attr('calendar.nick_calendly', 'start_time') %}
+        {{ 'on' if st != None and as_timestamp(st) - (as_timestamp( strptime(states.sensor.date_time.state, "%Y-%m-%d, %H:%M" ) ) ) < 240 else 'off' }}
 ```
 
-In that code you can change the number "180" on the last line to whatever you would like. That is the number of seconds before your event begins that this sensor will turn on. For some reason it seems like the first 60 seconds that you enter in don't count, so if you enter in "120" it will turn this sensor on 1 minute before your events. "180" was needed for 2 minutes. 
+In that code you can change the number "240" on the last line to whatever you would like. That is the number of seconds before your event begins that this sensor will turn on. For some reason it seems like the first 60 seconds that you enter in don't count, so if you enter in "120" it will turn this sensor on 1 minute before your events. "240" was needed for 3 minutes. 
 
 Once again, after you have made those changes save and restart. You are now down with the calendar portion of this integration!
 
-# Step 5 - Setting up Google Home
+# Step 5 - Setting up Google Home (can skip this if you only want slack)
 This process should be MUCH easier than the Google Calendar integration. Once you have your Google Home setup and connected to the same network as your HASSIO device, you should be able to click on "Configuration" in the sidebar, and then select "Integrations". Your Google Home is a "Google Cast" device, so setting up that integration should be all you need to do in order to get access to your Google Home. If you want to verify that it is setup correctly after restarting HASSIO, you can go back to the integrations page after your server has restarted and click on "Google Cast". You should see the name of your Google Home device there.
 
 # Step 6 - Getting ready to integration with Slack
