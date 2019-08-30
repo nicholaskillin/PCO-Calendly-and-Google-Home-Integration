@@ -136,11 +136,11 @@ Once again, after you have made those changes save and restart. You are now down
 This process should be MUCH easier than the Google Calendar integration. Once you have your Google Home setup and connected to the same network as your HASSIO device, you should be able to click on "Configuration" in the sidebar, and then select "Integrations". Your Google Home is a "Google Cast" device, so setting up that integration should be all you need to do in order to get access to your Google Home. If you want to verify that it is setup correctly after restarting HASSIO, you can go back to the integrations page after your server has restarted and click on "Google Cast". You should see the name of your Google Home device there.
 
 # Step 6 - Getting ready to integration with Slack
-The Slack integration will work just a little differently than the other two. We aren't actually going to integrate with Slack, but instead will create a Slack app that we can send a generic web request to in order to have it update our status.
+In order to update your status over the Slack API you will need to get a Legacy Token that we can send along with our API calls. This basically acts like a username/password so that Slack knows who you are.
 
-To create a Slack app you can head to https://api.slack.com/apps. Enter in a name for your app and for the development workspace select "Planning Center Staff". Once you have created your app select "oAuth and Permissions" from the left hand sidebar. On that page scroll down and under "Scopes" search for and select `users.profile:write`. Click on "Save Changes" right below that.
+To get one of these you will need to go to `https://api.slack.com/custom-integrations/legacy-tokens` while logged into your Planning Center Staff Slack account. You can copy your token from here:
 
-Now scroll up and click on "Install App to Workplace". Then click on "Authorize". Once you are back on the oAuth page copy that oAuth Access Token, you will need that later.
+![](/pictures/slack_legacy_token.png)
 
 # Step 7 - Putting it all together
 Now it's time to head back over to Home Assistant in order to put it all together. We will do this in Node-red, so once you are in Home Assistant click on that in the sidebar. 
