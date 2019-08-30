@@ -156,7 +156,7 @@ Then we will need to use a `function` node from the left sidebar to format the d
 
 ![](/pictures/break_slack_function_node.png)
 
-Finally, we have to send that data to Slack with an `http request` node. Here is what that should look like.
+Finally, we have to send that data to Slack with an `http request` node. Here is what that should look like. You will want to paste the Slack Legacy Token that you received in step 6 into the "Token" field.
 
 ![](/pictures/slack_http_request.png)
 
