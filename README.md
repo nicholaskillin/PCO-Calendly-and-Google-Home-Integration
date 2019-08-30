@@ -154,6 +154,8 @@ The first thing we have to do is setup the node that will trigger this entire pr
 
 Then we will need to use a `function` node from the left sidebar to format the data that we are going to send to Slack. Here is an example of the function that I would use to let Slack know that I'm on break. This function also automatically sends an update every 1 minute.
 
+I have included the JS that I use for all of mine in the `node_red_javascript` folder above.
+
 ![](/pictures/break_slack_function_node.png)
 
 Finally, we have to send that data to Slack with an `http request` node. Here is what that should look like. You will want to paste the Slack Legacy Token that you received in step 6 into the "Token" field.
