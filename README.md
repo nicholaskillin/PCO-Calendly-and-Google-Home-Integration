@@ -193,3 +193,29 @@ Once that has restarted, you can head back to Node-Red to get this setup.
 1. The first thing we are going to do is add an `events:state` node that watches the new Calendly Offset Sensor. Here are what my settings look like.
 
 ![](/pictures/calendly_event_offset_sensor_node.png)
+
+2. Now that Node-Red knows when it's 3 minutes before a phone call, we need to have it grab the information about that phone call using a `current state` node. Here you will want to pay attention to the Entity Location fields.
+
+![](/pictures/call_entity_data.png)
+
+3. Next we need to get the name of the event out of that data so that we can find the name of the person we are calling. I'm using a `change` node for this.
+
+![](/pictures/get_event_title.png)
+
+4. Next, we want to double check to make sure that this call didn't get canceled before we do anything else. A `switch` node will let us check to see if `Canceled` is in the event title or not.
+
+![](/pictures/is_it_canceled.png)
+
+5. If it's not canceled then we need to do two things. First, update our Slack status, and second, get the information that we need to announce the call.
+
+6. First, let's cover updating our Slack Status.
+
+Just like we did earlier, we will need a `function` node that can set our slack status for us.
+
+![](/pictures/phone_slack_status.png)
+
+Then we send that data via an HTTP request.
+
+![](/pictures/send_phone_slack_status.png)
+
+7. Now we will move on and get the rest of the information that we need about our customer.
