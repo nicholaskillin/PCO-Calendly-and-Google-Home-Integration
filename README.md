@@ -167,7 +167,29 @@ You can have a bunch of the `event:state` nodes connected to their own correspon
 ![](/pictures/slack_status_flow.png)
 
 ### Setting up a flow for Google Home
-This data is coming soon.
+Now it's time to hook up Google Home to these calendars.
 
+The first thing I had to do was setup what I called the "Calendly Event Offset" sensor. Right now our calendar will cause home assistant to turn specific entities on/off at the time that an event starts. However, I don't want Google to tell me that I have a phone call right now, I want it to tell me that I have a phone call in 3 mintues. So the offset sensor looks at the next time we have a Calendly call scheduled, and this custom sensor turns on if that time is within the next 3 minutes.
 
+To set that up you can add this code to your `/config/configuration.yaml` file.
+```
+# Date time sensor for Calendly offset calculations
+- platform: time_date
+  display_options:
+    - 'date_time'
+    
+sensors:
+  calendly_event_offset:
+      friendly_name: "Calendly Offset"
+      value_template: >
+        {% set st = state_attr('calendar.nick_calendly', 'start_time') %}
+        {{ 'on' if st != None and as_timestamp(st) - (as_timestamp( strptime(states.sensor.date_time.state, "%Y-%m-%d, %H:%M" ) ) ) < 240 else 'off' }}
+```
 
+Once you have added that head to the Server Controls, check your configuration file, and then restart Home Assistant.
+
+Once that has restarted, you can head back to Node-Red to get this setup.
+
+1. The first thing we are going to do is add an `events:state` node that watches the new Calendly Offset Sensor. Here are what my settings look like.
+
+![](/pictures/calendly_offset.png)
