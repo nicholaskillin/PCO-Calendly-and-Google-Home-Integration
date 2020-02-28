@@ -192,4 +192,4 @@ Once that has restarted, you can head back to Node-Red to get this setup.
 
 1. The first thing we are going to do is add an `events:state` node that watches the new Calendly Offset Sensor. Here are what my settings look like.
 
-![](/pictures/calendly_offset.png)
+![](/pictures/calendly offset.png)
